@@ -1,0 +1,87 @@
+# Codemagic CI/CD - OWJ App (أوج)
+# Project: owj_app v3.1.0
+
+workflows:
+  android-build:
+    name: Android APK & App Bundle
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: "*"
+          include: true
+          source: true
+    environment:
+      java: 17
+      flutter: 3.24.5
+      xcode: latest
+      vars:
+        PACKAGE_NAME: "com.owj.owj_app"
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Analyze Dart code
+        script: dart analyze --no-fatal-infos --no-fatal-warnings
+      - name: Build Android APK (Release)
+        script: flutter build apk --release --build-number=$CM_BUILD_NUMBER
+      - name: Build Android App Bundle (Release)
+        script: flutter build appbundle --release --build-number=$CM_BUILD_NUMBER
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/bundle/release/*.aab
+
+  ios-build:
+    name: iOS IPA
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+        - pattern: master
+          include: true
+          source: true
+    environment:
+      flutter: 3.24.5
+      xcode: 15.4
+      cocoapods: default
+      vars:
+        PACKAGE_NAME: "com.owj.owjApp"
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Install CocoaPods dependencies
+        script: cd ios && pod install && cd ..
+      - name: Analyze Dart code
+        script: dart analyze --no-fatal-infos --no-fatal-warnings
+      - name: Build iOS (Release)
+        script: flutter build ios --release --build-number=$CM_BUILD_NUMBER --no-codesign
+      - name: Build iOS IPA
+        script: |
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -archivePath build/Runner.xcarchive \
+            archive \
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="" \
+          || true
+          if [ -d "build/Runner.xcarchive" ]; then
+            xcodebuild \
+              -exportArchive \
+              -archivePath build/Runner.xcarchive \
+              -exportOptionsPlist ios/ExportOptions.plist \
+              -exportPath build/ipa \
+              -allowProvisioningUpdates \
+            || echo "IPA export skipped - code signing not configured"
+          fi
+    artifacts:
+      - build/ios/ipa/*.ipa
