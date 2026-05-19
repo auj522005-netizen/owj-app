@@ -12,10 +12,10 @@ class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreen> createState() => ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -107,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     }
   }
 
-  void _showModelPicker(BuildContext context, ApiKeysProvider apiKeys, bool isDark) {
+  void showModelPicker(BuildContext context, ApiKeysProvider apiKeys, bool isDark) {
     showModalBottomSheet(
       context: context,
       backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
@@ -243,7 +243,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _showClearDialog(BuildContext context) {
+  void showClearDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -264,7 +264,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _showNotificationsSheet(BuildContext context, NotificationProvider provider, bool isDark) {
+  void showNotificationsSheet(BuildContext context, NotificationProvider provider, bool isDark) {
     if (provider.notifications.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('مفيش إشعارات دلوقتي'), duration: Duration(seconds: 2)),
@@ -341,7 +341,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final isDark = Provider.of<AppProvider>(context, listen: true).isDarkMode;
     final apiKeys = Provider.of<ApiKeysProvider>(context, listen: true);
     final charProvider = Provider.of<CharacterProvider>(context, listen: true);
-    final notifProvider = Provider.of<NotificationProvider>(context, listen: true);
 
     final char = charProvider.allCharacters.firstWhere(
       (c) => c['name'] == charProvider.activeCharacter,
@@ -356,151 +355,92 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: GestureDetector(
-          onTap: () => _showModelPicker(context, apiKeys, isDark),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(char['emoji'] ?? '', style: const TextStyle(fontSize: 20)),
-              const SizedBox(width: 6),
-              Text(char['name'] ?? 'أوج', style: const TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: AppColors.gold.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 0.5),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(apiKeys.selectedModel, style: TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 3),
-                    Icon(Icons.expand_more, color: AppColors.gold, size: 14),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined, size: 22),
-                onPressed: () => _showNotificationsSheet(context, notifProvider, isDark),
-              ),
-              if (notifProvider.unreadCount > 0)
-                Positioned(
-                  top: 8, right: 8,
-                  child: Container(
-                    width: 16, height: 16,
-                    decoration: BoxDecoration(color: AppColors.error, shape: BoxShape.circle),
-                    child: Center(
-                      child: Text('${notifProvider.unreadCount}',
-                        style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+    return Column(
+      children: [
+        Consumer<ChatProvider>(
+          builder: (context, chat, _) {
+            return Column(
+              children: [
+                if (chat.activeProvider.isNotEmpty)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    color: AppColors.gold.withOpacity(0.15),
+                    child: Text(
+                      'يستخدم: ${chat.activeProvider} · ${AppConstants.aiModels[apiKeys.selectedModel] ?? ''}',
+                      style: TextStyle(color: AppColors.gold, fontSize: 11),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-            ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline, size: 20),
-            onPressed: () => _showClearDialog(context),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Consumer<ChatProvider>(
-            builder: (context, chat, _) {
-              return Column(
-                children: [
-                  if (chat.activeProvider.isNotEmpty)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      color: AppColors.gold.withOpacity(0.15),
-                      child: Text(
-                        'يستخدم: ${chat.activeProvider} · ${AppConstants.aiModels[apiKeys.selectedModel] ?? ''}',
-                        style: TextStyle(color: AppColors.gold, fontSize: 11),
-                        textAlign: TextAlign.center,
-                      ),
+                if (chat.isSearching)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    color: AppColors.info.withOpacity(0.15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.info)),
+                        const SizedBox(width: 8),
+                        Text('ببحث عن: ${chat.searchQuery}', style: TextStyle(color: AppColors.info, fontSize: 12)),
+                      ],
                     ),
-                  if (chat.isSearching)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      color: AppColors.info.withOpacity(0.15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.info)),
-                          const SizedBox(width: 8),
-                          Text('ببحث عن: ${chat.searchQuery}', style: TextStyle(color: AppColors.info, fontSize: 12)),
-                        ],
-                      ),
+                  ),
+              ],
+            );
+          },
+        ),
+        Expanded(
+          child: Consumer<ChatProvider>(
+            builder: (context, chatProvider, _) {
+              if (chatProvider.messages.isEmpty) {
+                return _buildWelcome(isDark, char);
+              }
+              return Stack(
+                children: [
+                  ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 80),
+                    itemCount: chatProvider.messages.length + (chatProvider.isLoading ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == chatProvider.messages.length) {
+                        return _buildTypingIndicator(isDark, char);
+                      }
+                      final msg = chatProvider.messages[index];
+                      return _buildMessageBubble(msg, isDark, char);
+                    },
+                  ),
+                  if (_isAvatarVisible)
+                    Positioned(
+                      bottom: 16, right: 16,
+                      child: _buildFloatingAvatar(char, isDark, chatProvider.isLoading),
                     ),
                 ],
               );
             },
           ),
-          Expanded(
-            child: Consumer<ChatProvider>(
-              builder: (context, chatProvider, _) {
-                if (chatProvider.messages.isEmpty) {
-                  return _buildWelcome(isDark, char);
-                }
-                return Stack(
-                  children: [
-                    ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 80),
-                      itemCount: chatProvider.messages.length + (chatProvider.isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == chatProvider.messages.length) {
-                          return _buildTypingIndicator(isDark, char);
-                        }
-                        final msg = chatProvider.messages[index];
-                        return _buildMessageBubble(msg, isDark, char);
-                      },
-                    ),
-                    if (_isAvatarVisible)
-                      Positioned(
-                        bottom: 16, right: 16,
-                        child: _buildFloatingAvatar(char, isDark, chatProvider.isLoading),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
-          Consumer<ChatProvider>(
-            builder: (context, chat, _) {
-              if (chat.toolResults.isEmpty) return const SizedBox.shrink();
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                color: AppColors.success.withOpacity(0.1),
-                child: Wrap(
-                  spacing: 8, runSpacing: 4,
-                  children: chat.toolResults.map((r) => Chip(
-                    avatar: Icon(Icons.check_circle, color: AppColors.success, size: 16),
-                    label: Text('${r.type}: ${r.title}', style: TextStyle(color: AppColors.success, fontSize: 11)),
-                    backgroundColor: AppColors.success.withOpacity(0.1),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    padding: EdgeInsets.zero,
-                  )).toList(),
-                ),
-              );
-            },
-          ),
-          _buildInputArea(isDark),
-        ],
-      ),
+        ),
+        Consumer<ChatProvider>(
+          builder: (context, chat, _) {
+            if (chat.toolResults.isEmpty) return const SizedBox.shrink();
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              color: AppColors.success.withOpacity(0.1),
+              child: Wrap(
+                spacing: 8, runSpacing: 4,
+                children: chat.toolResults.map((r) => Chip(
+                  avatar: Icon(Icons.check_circle, color: AppColors.success, size: 16),
+                  label: Text('${r.type}: ${r.title}', style: TextStyle(color: AppColors.success, fontSize: 11)),
+                  backgroundColor: AppColors.success.withOpacity(0.1),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.zero,
+                )).toList(),
+              ),
+            );
+          },
+        ),
+        _buildInputArea(isDark),
+      ],
     );
   }
 
@@ -714,47 +654,45 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(color: bgColor, border: Border(top: BorderSide(color: borderColor, width: 0.5))),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(color: textColor, fontSize: 15),
-                maxLines: 4,
-                minLines: 1,
-                decoration: InputDecoration(
-                  hintText: 'اكتب رسالتك...',
-                  hintStyle: TextStyle(color: hintColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
-                  filled: true,
-                  fillColor: fillColor,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                ),
-                onSubmitted: (_) => _sendMessage(),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(color: textColor, fontSize: 15),
+              maxLines: 4,
+              minLines: 1,
+              decoration: InputDecoration(
+                hintText: 'اكتب رسالتك...',
+                hintStyle: TextStyle(color: hintColor),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                filled: true,
+                fillColor: fillColor,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
+              onSubmitted: (_) => _sendMessage(),
             ),
-            const SizedBox(width: 8),
-            Consumer<ChatProvider>(
-              builder: (context, chat, _) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: chat.isLoading ? AppColors.gold.withOpacity(0.5) : AppColors.gold,
-                    shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: AppColors.gold.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))],
-                  ),
-                  child: IconButton(
-                    icon: chat.isLoading
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.darkBg, strokeWidth: 2))
-                      : const Icon(Icons.send_rounded, color: AppColors.darkBg, size: 20),
-                    onPressed: chat.isLoading ? null : _sendMessage,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 8),
+          Consumer<ChatProvider>(
+            builder: (context, chat, _) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: chat.isLoading ? AppColors.gold.withOpacity(0.5) : AppColors.gold,
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: AppColors.gold.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))],
+                ),
+                child: IconButton(
+                  icon: chat.isLoading
+                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.darkBg, strokeWidth: 2))
+                    : const Icon(Icons.send_rounded, color: AppColors.darkBg, size: 20),
+                  onPressed: chat.isLoading ? null : _sendMessage,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

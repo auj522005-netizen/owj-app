@@ -9,10 +9,10 @@ class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
 
   @override
-  State<JournalScreen> createState() => _JournalScreenState();
+  State<JournalScreen> createState() => JournalScreenState();
 }
 
-class _JournalScreenState extends State<JournalScreen> {
+class JournalScreenState extends State<JournalScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   String _mood = 'عادي';
@@ -38,35 +38,28 @@ class _JournalScreenState extends State<JournalScreen> {
     final isDark = Provider.of<AppProvider>(context).isDarkMode;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('المذكرات')),
-      body: Consumer<JournalProvider>(
-        builder: (context, provider, _) {
-          if (provider.entries.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.book, size: 64, color: subColor),
-                  const SizedBox(height: 16),
-                  Text('مفيش مذكرات لسه', style: TextStyle(color: subColor, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Text('سجل أول مذكرة ليك', style: TextStyle(color: subColor, fontSize: 13)),
-                ],
-              ),
-            );
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: provider.entries.length,
-            itemBuilder: (context, index) => _buildEntryCard(provider.entries[index], provider, isDark),
+    return Consumer<JournalProvider>(
+      builder: (context, provider, _) {
+        if (provider.entries.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.book, size: 64, color: subColor),
+                const SizedBox(height: 16),
+                Text('مفيش مذكرات لسه', style: TextStyle(color: subColor, fontSize: 16)),
+                const SizedBox(height: 8),
+                Text('سجل أول مذكرة ليك', style: TextStyle(color: subColor, fontSize: 13)),
+              ],
+            ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddEntryDialog(isDark),
-        child: const Icon(Icons.add),
-      ),
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: provider.entries.length,
+          itemBuilder: (context, index) => _buildEntryCard(provider.entries[index], provider, isDark),
+        );
+      },
     );
   }
 
@@ -95,7 +88,7 @@ class _JournalScreenState extends State<JournalScreen> {
     );
   }
 
-  void _showAddEntryDialog(bool isDark) {
+  void showAddEntryDialog(BuildContext context, bool isDark) {
     _titleController.clear();
     _contentController.clear();
     _mood = 'عادي';

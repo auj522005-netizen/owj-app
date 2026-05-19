@@ -9,10 +9,10 @@ class GoalsScreen extends StatefulWidget {
   const GoalsScreen({super.key});
 
   @override
-  State<GoalsScreen> createState() => _GoalsScreenState();
+  State<GoalsScreen> createState() => GoalsScreenState();
 }
 
-class _GoalsScreenState extends State<GoalsScreen> {
+class GoalsScreenState extends State<GoalsScreen> {
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
   final _milestoneController = TextEditingController();
@@ -30,35 +30,28 @@ class _GoalsScreenState extends State<GoalsScreen> {
     final isDark = Provider.of<AppProvider>(context).isDarkMode;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('الأهداف')),
-      body: Consumer<GoalsProvider>(
-        builder: (context, provider, _) {
-          if (provider.goals.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.flag, size: 64, color: subColor),
-                  const SizedBox(height: 16),
-                  Text('مفيش أهداف لسه', style: TextStyle(color: subColor, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Text('اضغط + عشان تضيف هدف جديد', style: TextStyle(color: subColor, fontSize: 13)),
-                ],
-              ),
-            );
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: provider.goals.length,
-            itemBuilder: (context, index) => _buildGoalCard(provider.goals[index], provider, isDark),
+    return Consumer<GoalsProvider>(
+      builder: (context, provider, _) {
+        if (provider.goals.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.flag, size: 64, color: subColor),
+                const SizedBox(height: 16),
+                Text('مفيش أهداف لسه', style: TextStyle(color: subColor, fontSize: 16)),
+                const SizedBox(height: 8),
+                Text('اضغط + عشان تضيف هدف جديد', style: TextStyle(color: subColor, fontSize: 13)),
+              ],
+            ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddGoalDialog(isDark),
-        child: const Icon(Icons.add),
-      ),
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: provider.goals.length,
+          itemBuilder: (context, index) => _buildGoalCard(provider.goals[index], provider, isDark),
+        );
+      },
     );
   }
 
@@ -111,7 +104,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
     );
   }
 
-  void _showAddGoalDialog(bool isDark) {
+  void showAddGoalDialog(BuildContext context, bool isDark) {
     _titleController.clear();
     _descController.clear();
     _milestoneController.clear();

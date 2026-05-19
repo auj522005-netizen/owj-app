@@ -10,10 +10,10 @@ class CharactersScreen extends StatefulWidget {
   const CharactersScreen({super.key});
 
   @override
-  State<CharactersScreen> createState() => _CharactersScreenState();
+  State<CharactersScreen> createState() => CharactersScreenState();
 }
 
-class _CharactersScreenState extends State<CharactersScreen> with TickerProviderStateMixin {
+class CharactersScreenState extends State<CharactersScreen> with TickerProviderStateMixin {
   late AnimationController _selectionController;
   String? _justSelected;
 
@@ -35,52 +35,49 @@ class _CharactersScreenState extends State<CharactersScreen> with TickerProvider
     final textColor = isDark ? Colors.white : Colors.black87;
     final subColor = isDark ? Colors.white60 : Colors.black54;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('الشخصيات')),
-      body: Consumer<CharacterProvider>(
-        builder: (context, provider, _) {
-          final allChars = provider.allCharacters;
-          return CustomScrollView(
-            slivers: [
-              // Active character hero
-              SliverToBoxAdapter(
-                child: _buildActiveHero(provider, isDark, textColor, subColor),
-              ),
-              // Characters grid
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.85,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      if (index < allChars.length) {
-                        final char = allChars[index];
-                        final isActive = provider.activeCharacter == char['name'];
-                        final isCustom = index >= AppConstants.characters.length;
-                        return _buildCharCard(context, char, isActive, provider, isCustom, index - AppConstants.characters.length, isDark, textColor, subColor);
-                      }
-                      return null;
-                    },
-                    childCount: allChars.length,
-                  ),
+    return Consumer<CharacterProvider>(
+      builder: (context, provider, _) {
+        final allChars = provider.allCharacters;
+        return CustomScrollView(
+          slivers: [
+            // Active character hero
+            SliverToBoxAdapter(
+              child: _buildActiveHero(provider, isDark, textColor, subColor),
+            ),
+            // Characters grid
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.85,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (index < allChars.length) {
+                      final char = allChars[index];
+                      final isActive = provider.activeCharacter == char['name'];
+                      final isCustom = index >= AppConstants.characters.length;
+                      return _buildCharCard(context, char, isActive, provider, isCustom, index - AppConstants.characters.length, isDark, textColor, subColor);
+                    }
+                    return null;
+                  },
+                  childCount: allChars.length,
                 ),
               ),
-              // Add custom
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: _buildAddCustomCard(context, provider, isDark),
-                ),
+            ),
+            // Add custom
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildAddCustomCard(context, provider, isDark),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 

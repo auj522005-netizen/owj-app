@@ -9,11 +9,11 @@ class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
+  State<TasksScreen> createState() => TasksScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class TasksScreenState extends State<TasksScreen> with SingleTickerProviderStateMixin {
+  late TabController tabController;
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
   String _priority = 'medium';
@@ -21,12 +21,12 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    tabController.dispose();
     _titleController.dispose();
     _descController.dispose();
     super.dispose();
@@ -35,34 +35,38 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     final isDark = Provider.of<AppProvider>(context).isDarkMode;
+    final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
+    final tabBarBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('المهام'),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.gold,
-          unselectedLabelColor: isDark ? AppColors.textSecondary : AppColors.textSecondaryLight,
-          indicatorColor: AppColors.gold,
-          tabs: const [
-            Tab(text: 'كل المهام'),
-            Tab(text: 'قيد التنفيذ'),
-            Tab(text: 'مكتملة'),
-          ],
+    return Column(
+      children: [
+        // TabBar with matching AppBar background
+        Container(
+          color: tabBarBg,
+          child: TabBar(
+            controller: tabController,
+            labelColor: AppColors.gold,
+            unselectedLabelColor: subColor,
+            indicatorColor: AppColors.gold,
+            tabs: const [
+              Tab(text: 'كل المهام'),
+              Tab(text: 'قيد التنفيذ'),
+              Tab(text: 'مكتملة'),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildTaskList(Provider.of<TasksProvider>(context).tasks, isDark),
-          _buildTaskList(Provider.of<TasksProvider>(context).pendingTasks, isDark),
-          _buildTaskList(Provider.of<TasksProvider>(context).completedTasks, isDark),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTaskDialog(isDark),
-        child: const Icon(Icons.add),
-      ),
+        // TabBarView fills remaining space
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              _buildTaskList(Provider.of<TasksProvider>(context).tasks, isDark),
+              _buildTaskList(Provider.of<TasksProvider>(context).pendingTasks, isDark),
+              _buildTaskList(Provider.of<TasksProvider>(context).completedTasks, isDark),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -157,7 +161,7 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
     );
   }
 
-  void _showAddTaskDialog(bool isDark) {
+  void showAddTaskDialog(BuildContext context, bool isDark) {
     _titleController.clear();
     _descController.clear();
     _priority = 'medium';

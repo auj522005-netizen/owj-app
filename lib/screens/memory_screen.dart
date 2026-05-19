@@ -5,16 +5,15 @@ import '../providers/memory_provider.dart';
 import '../providers/api_keys_provider.dart';
 import '../providers/app_provider.dart';
 import '../core/theme.dart';
-import '../core/constants.dart';
 
 class MemoryScreen extends StatefulWidget {
   const MemoryScreen({super.key});
 
   @override
-  State<MemoryScreen> createState() => _MemoryScreenState();
+  State<MemoryScreen> createState() => MemoryScreenState();
 }
 
-class _MemoryScreenState extends State<MemoryScreen> {
+class MemoryScreenState extends State<MemoryScreen> {
   final _contentController = TextEditingController();
   final _searchController = TextEditingController();
   String _category = 'شخصي';
@@ -23,6 +22,23 @@ class _MemoryScreenState extends State<MemoryScreen> {
   List<MemoryItem> _searchResults = [];
 
   final List<String> _categories = ['شخصي', 'عمل', 'تعلم', 'صحي', 'مالي', 'اجتماعي'];
+
+  bool get isSearching => _isSearching;
+
+  void toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+        _searchResults = [];
+      }
+    });
+  }
+
+  void syncMemory(BuildContext context) {
+    final apiKeys = Provider.of<ApiKeysProvider>(context, listen: false);
+    Provider.of<MemoryProvider>(context, listen: false).syncFromMem0(apiKeys);
+  }
 
   @override
   void dispose() {
@@ -37,54 +53,32 @@ class _MemoryScreenState extends State<MemoryScreen> {
     final isDark = Provider.of<AppProvider>(context).isDarkMode;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الذاكرة'),
-        actions: [
-          IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search),
-            onPressed: () => setState(() { _isSearching = !_isSearching; if (!_isSearching) { _searchController.clear(); _searchResults = []; } }),
-          ),
-          IconButton(
-            icon: const Icon(Icons.sync),
-            onPressed: () {
-              final apiKeys = Provider.of<ApiKeysProvider>(context, listen: false);
-              Provider.of<MemoryProvider>(context, listen: false).syncFromMem0(apiKeys);
-            },
-          ),
-        ],
-      ),
-      body: Consumer<MemoryProvider>(
-        builder: (context, provider, _) {
-          return Column(children: [
-            if (provider.isSyncing) LinearProgressIndicator(backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder, color: AppColors.gold),
-            if (_isSearching) ...[
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: TextField(
-                  controller: _searchController, textDirection: TextDirection.rtl,
-                  style: TextStyle(color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight),
-                  decoration: InputDecoration(hintText: 'ابحث في الذاكرة...', hintStyle: TextStyle(color: subColor), filled: true, fillColor: isDark ? AppColors.darkCard : AppColors.lightCard, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), prefixIcon: const Icon(Icons.search, color: AppColors.gold)),
-                  onChanged: (query) => setState(() => _searchResults = query.isEmpty ? [] : provider.searchMemories(query)),
-                ),
+    return Consumer<MemoryProvider>(
+      builder: (context, provider, _) {
+        return Column(children: [
+          if (provider.isSyncing) LinearProgressIndicator(backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder, color: AppColors.gold),
+          if (_isSearching) ...[
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                controller: _searchController, textDirection: TextDirection.rtl,
+                style: TextStyle(color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight),
+                decoration: InputDecoration(hintText: 'ابحث في الذاكرة...', hintStyle: TextStyle(color: subColor), filled: true, fillColor: isDark ? AppColors.darkCard : AppColors.lightCard, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), prefixIcon: const Icon(Icons.search, color: AppColors.gold)),
+                onChanged: (query) => setState(() => _searchResults = query.isEmpty ? [] : provider.searchMemories(query)),
               ),
-            ],
-            Container(
-              height: 40, padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: ListView(scrollDirection: Axis.horizontal, reverse: true, children: _categories.map((cat) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: ChoiceChip(label: Text(cat), selected: _category == cat, selectedColor: AppColors.gold, labelStyle: TextStyle(color: _category == cat ? AppColors.darkBg : subColor, fontSize: 12), onSelected: (_) => setState(() => _category = cat)),
-              )).toList()),
             ),
-            const SizedBox(height: 8),
-            Expanded(child: _buildMemoryList(provider, isDark)),
-          ]);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddMemoryDialog(isDark),
-        child: const Icon(Icons.add),
-      ),
+          ],
+          Container(
+            height: 40, padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: ListView(scrollDirection: Axis.horizontal, reverse: true, children: _categories.map((cat) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: ChoiceChip(label: Text(cat), selected: _category == cat, selectedColor: AppColors.gold, labelStyle: TextStyle(color: _category == cat ? AppColors.darkBg : subColor, fontSize: 12), onSelected: (_) => setState(() => _category = cat)),
+            )).toList()),
+          ),
+          const SizedBox(height: 8),
+          Expanded(child: _buildMemoryList(provider, isDark)),
+        ]);
+      },
     );
   }
 
@@ -127,7 +121,7 @@ class _MemoryScreenState extends State<MemoryScreen> {
     );
   }
 
-  void _showAddMemoryDialog(bool isDark) {
+  void showAddMemoryDialog(BuildContext context, bool isDark) {
     _contentController.clear();
     _tagController.clear();
     List<String> tags = [];

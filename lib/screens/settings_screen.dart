@@ -10,11 +10,11 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
+  late TabController tabController;
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, bool> _obscured = {};
   final Map<String, bool> _editing = {};
@@ -22,12 +22,12 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    tabController.dispose();
     for (var c in _controllers.values) { c.dispose(); }
     super.dispose();
   }
@@ -46,34 +46,40 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     final appProvider = Provider.of<AppProvider>(context);
     final apiKeys = Provider.of<ApiKeysProvider>(context);
     final isDark = appProvider.isDarkMode;
-    final bgColor = isDark ? AppColors.darkBg : AppColors.lightBg;
     final cardColor = isDark ? AppColors.darkCard : AppColors.lightCard;
     final textColor = isDark ? AppColors.textPrimary : AppColors.textPrimaryLight;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
+    final tabBarBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الإعدادات'),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: AppColors.gold,
-          labelColor: AppColors.gold,
-          unselectedLabelColor: subColor,
-          tabs: const [
-            Tab(icon: Icon(Icons.smart_toy, size: 18), text: 'الذكاء'),
-            Tab(icon: Icon(Icons.key, size: 18), text: 'المفاتيح'),
-            Tab(icon: Icon(Icons.tune, size: 18), text: 'عام'),
-          ],
+    return Column(
+      children: [
+        // TabBar with matching AppBar background
+        Container(
+          color: tabBarBg,
+          child: TabBar(
+            controller: tabController,
+            indicatorColor: AppColors.gold,
+            labelColor: AppColors.gold,
+            unselectedLabelColor: subColor,
+            tabs: const [
+              Tab(icon: Icon(Icons.smart_toy, size: 18), text: 'الذكاء'),
+              Tab(icon: Icon(Icons.key, size: 18), text: 'المفاتيح'),
+              Tab(icon: Icon(Icons.tune, size: 18), text: 'عام'),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildAITab(apiKeys, isDark, textColor, subColor, cardColor),
-          _buildKeysTab(apiKeys, isDark, textColor, subColor, cardColor),
-          _buildGeneralTab(appProvider, apiKeys, isDark, textColor, subColor, cardColor),
-        ],
-      ),
+        // TabBarView fills remaining space
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              _buildAITab(apiKeys, isDark, textColor, subColor, cardColor),
+              _buildKeysTab(apiKeys, isDark, textColor, subColor, cardColor),
+              _buildGeneralTab(appProvider, apiKeys, isDark, textColor, subColor, cardColor),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -618,7 +624,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
         action: SnackBarAction(
           label: 'إضافة',
           textColor: AppColors.darkBg,
-          onPressed: () => _tabController.animateTo(1),
+          onPressed: () => tabController.animateTo(1),
         ),
       ),
     );
