@@ -32,10 +32,6 @@ workflows:
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
       - build/app/outputs/bundle/release/*.aab
-    publishing:
-      email:
-        recipients:
-          - $CM_REPO_OWNER_EMAIL
 
   ios-build:
     name: iOS IPA
@@ -89,7 +85,3 @@ workflows:
           fi
     artifacts:
       - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - $CM_REPO_OWNER_EMAIL
