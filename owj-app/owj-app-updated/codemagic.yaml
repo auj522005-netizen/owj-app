@@ -26,9 +26,9 @@ workflows:
       - name: Analyze Dart code
         script: dart analyze --no-fatal-warnings || true
       - name: Build Android APK (Release)
-        script: flutter build apk --release --build-number=$CM_BUILD_NUMBER
+        script: flutter build apk --release --build-number=${CM_BUILD_NUMBER:-1}
       - name: Build Android App Bundle (Release)
-        script: flutter build appbundle --release --build-number=$CM_BUILD_NUMBER
+        script: flutter build appbundle --release --build-number=${CM_BUILD_NUMBER:-1}
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
       - build/app/outputs/bundle/release/*.aab
@@ -61,7 +61,7 @@ workflows:
       - name: Analyze Dart code
         script: dart analyze --no-fatal-warnings || true
       - name: Build iOS (Release)
-        script: flutter build ios --release --build-number=$CM_BUILD_NUMBER --no-codesign
+        script: flutter build ios --release --build-number=${CM_BUILD_NUMBER:-1} --no-codesign
       - name: Build iOS IPA
         script: |
           xcodebuild \
