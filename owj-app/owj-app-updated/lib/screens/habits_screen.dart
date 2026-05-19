@@ -9,10 +9,10 @@ class HabitsScreen extends StatefulWidget {
   const HabitsScreen({super.key});
 
   @override
-  State<HabitsScreen> createState() => _HabitsScreenState();
+  State<HabitsScreen> createState() => HabitsScreenState();
 }
 
-class _HabitsScreenState extends State<HabitsScreen> {
+class HabitsScreenState extends State<HabitsScreen> {
   final _nameController = TextEditingController();
   String _selectedEmoji = '✅';
   String _frequency = 'daily';
@@ -29,55 +29,48 @@ class _HabitsScreenState extends State<HabitsScreen> {
     final isDark = Provider.of<AppProvider>(context).isDarkMode;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('العادات')),
-      body: Consumer<HabitsProvider>(
-        builder: (context, provider, _) {
-          if (provider.habits.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.repeat, size: 64, color: subColor),
-                  const SizedBox(height: 16),
-                  Text('مفيش عادات لسه', style: TextStyle(color: subColor, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Text('اضغط + عشان تضيف عادة جديدة', style: TextStyle(color: subColor, fontSize: 13)),
-                ],
-              ),
-            );
-          }
-
-          final completionRate = provider.todayCompletionRate;
-          return Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(16), padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: isDark ? AppColors.darkCard : AppColors.lightCard, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, width: 0.5)),
-                child: Column(children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text('تقدم اليوم', style: TextStyle(color: subColor, fontSize: 14)),
-                    Text('${(completionRate * 100).toInt()}%', style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, fontSize: 18)),
-                  ]),
-                  const SizedBox(height: 8),
-                  ClipRRect(borderRadius: BorderRadius.circular(8), child: LinearProgressIndicator(value: completionRate, backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder, color: AppColors.gold, minHeight: 10)),
-                ]),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: provider.habits.length,
-                  itemBuilder: (context, index) => _buildHabitCard(provider.habits[index], provider, isDark),
-                ),
-              ),
-            ],
+    return Consumer<HabitsProvider>(
+      builder: (context, provider, _) {
+        if (provider.habits.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.repeat, size: 64, color: subColor),
+                const SizedBox(height: 16),
+                Text('مفيش عادات لسه', style: TextStyle(color: subColor, fontSize: 16)),
+                const SizedBox(height: 8),
+                Text('اضغط + عشان تضيف عادة جديدة', style: TextStyle(color: subColor, fontSize: 13)),
+              ],
+            ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddHabitDialog(isDark),
-        child: const Icon(Icons.add),
-      ),
+        }
+
+        final completionRate = provider.todayCompletionRate;
+        return Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(16), padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: isDark ? AppColors.darkCard : AppColors.lightCard, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, width: 0.5)),
+              child: Column(children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text('تقدم اليوم', style: TextStyle(color: subColor, fontSize: 14)),
+                  Text('${(completionRate * 100).toInt()}%', style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, fontSize: 18)),
+                ]),
+                const SizedBox(height: 8),
+                ClipRRect(borderRadius: BorderRadius.circular(8), child: LinearProgressIndicator(value: completionRate, backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder, color: AppColors.gold, minHeight: 10)),
+              ]),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: provider.habits.length,
+                itemBuilder: (context, index) => _buildHabitCard(provider.habits[index], provider, isDark),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -116,7 +109,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
     );
   }
 
-  void _showAddHabitDialog(bool isDark) {
+  void showAddHabitDialog(BuildContext context, bool isDark) {
     _nameController.clear();
     _selectedEmoji = '✅';
     _frequency = 'daily';
