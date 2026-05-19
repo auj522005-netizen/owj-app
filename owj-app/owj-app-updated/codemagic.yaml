@@ -22,13 +22,13 @@ workflows:
         PACKAGE_NAME: "com.owj.owj_app"
     scripts:
       - name: Get Flutter packages
-        run: flutter pub get
+        script: flutter pub get
       - name: Analyze Dart code
-        run: dart analyze
+        script: dart analyze
       - name: Build Android APK (Release)
-        run: flutter build apk --release --build-number=$CM_BUILD_NUMBER
+        script: flutter build apk --release --build-number=$CM_BUILD_NUMBER
       - name: Build Android App Bundle (Release)
-        run: flutter build appbundle --release --build-number=$CM_BUILD_NUMBER
+        script: flutter build appbundle --release --build-number=$CM_BUILD_NUMBER
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
       - build/app/outputs/bundle/release/*.aab
@@ -59,15 +59,15 @@ workflows:
         PACKAGE_NAME: "com.owj.owjApp"
     scripts:
       - name: Get Flutter packages
-        run: flutter pub get
+        script: flutter pub get
       - name: Install CocoaPods dependencies
-        run: cd ios && pod install && cd ..
+        script: cd ios && pod install && cd ..
       - name: Analyze Dart code
-        run: dart analyze
+        script: dart analyze
       - name: Build iOS (Release)
-        run: flutter build ios --release --build-number=$CM_BUILD_NUMBER --no-codesign
+        script: flutter build ios --release --build-number=$CM_BUILD_NUMBER --no-codesign
       - name: Build iOS IPA
-        run: |
+        script: |
           xcodebuild \
             -workspace ios/Runner.xcworkspace \
             -scheme Runner \
