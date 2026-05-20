@@ -46,7 +46,7 @@ class AppTheme {
           color: AppColors.gold,
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          fontFamily: 'NotoSansArabic',
+          fontFamily: 'Roboto',
         ),
       ),
       cardTheme: CardTheme(

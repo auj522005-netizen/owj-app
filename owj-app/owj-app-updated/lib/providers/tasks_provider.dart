@@ -18,7 +18,7 @@ class Task {
     this.isCompleted = false,
     required this.dueDate,
     this.priority = 'medium',
-    this.category = 'عام',
+    this.category = 'General',
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +32,7 @@ class Task {
     isCompleted: json['isCompleted'] ?? false,
     dueDate: DateTime.parse(json['dueDate']),
     priority: json['priority'] ?? 'medium',
-    category: json['category'] ?? 'عام',
+    category: json['category'] ?? 'General',
   );
 }
 

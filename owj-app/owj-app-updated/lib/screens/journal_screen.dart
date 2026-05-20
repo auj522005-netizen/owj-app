@@ -15,15 +15,15 @@ class JournalScreen extends StatefulWidget {
 class JournalScreenState extends State<JournalScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  String _mood = 'عادي';
+  String _mood = 'Normal';
 
   final List<Map<String, String>> _moods = [
-    {'label': 'سعيد', 'emoji': '😊'},
-    {'label': 'حزين', 'emoji': '😢'},
-    {'label': 'عادي', 'emoji': '😐'},
-    {'label': 'متحمس', 'emoji': '🤩'},
-    {'label': 'قلق', 'emoji': '😟'},
-    {'label': 'هادي', 'emoji': '😌'},
+    {'label': 'Happy', 'emoji': '😊'},
+    {'label': 'Sad', 'emoji': '😢'},
+    {'label': 'Normal', 'emoji': '😐'},
+    {'label': 'Excited', 'emoji': '🤩'},
+    {'label': 'Anxious', 'emoji': '😟'},
+    {'label': 'Calm', 'emoji': '😌'},
   ];
 
   @override
@@ -47,9 +47,9 @@ class JournalScreenState extends State<JournalScreen> {
               children: [
                 Icon(Icons.book, size: 64, color: subColor),
                 const SizedBox(height: 16),
-                Text('مفيش مذكرات لسه', style: TextStyle(color: subColor, fontSize: 16)),
+                Text('No journal entries yet', style: TextStyle(color: subColor, fontSize: 16)),
                 const SizedBox(height: 8),
-                Text('سجل أول مذكرة ليك', style: TextStyle(color: subColor, fontSize: 13)),
+                Text('Write your first entry', style: TextStyle(color: subColor, fontSize: 13)),
               ],
             ),
           );
@@ -75,12 +75,12 @@ class JournalScreenState extends State<JournalScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Row(children: [
-            Expanded(child: Text(entry.title, style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl)),
+            Expanded(child: Text(entry.title, style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold))),
             Text(moodEmoji, style: const TextStyle(fontSize: 24)),
             IconButton(icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20), onPressed: () => provider.deleteEntry(entry.id)),
           ]),
           const SizedBox(height: 8),
-          Text(entry.content, style: TextStyle(color: subColor, fontSize: 14, height: 1.6), textDirection: TextDirection.rtl, maxLines: 5, overflow: TextOverflow.ellipsis),
+          Text(entry.content, style: TextStyle(color: subColor, fontSize: 14, height: 1.6), maxLines: 5, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 8),
           Text('${entry.date.day}/${entry.date.month}/${entry.date.year} - ${entry.date.hour}:${entry.date.minute.toString().padLeft(2, '0')}', style: TextStyle(color: subColor, fontSize: 11)),
         ]),
@@ -91,7 +91,7 @@ class JournalScreenState extends State<JournalScreen> {
   void showAddEntryDialog(BuildContext context, bool isDark) {
     _titleController.clear();
     _contentController.clear();
-    _mood = 'عادي';
+    _mood = 'Normal';
     final cardBg = isDark ? AppColors.darkCard : AppColors.lightCard;
     final surfaceBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final textColor = isDark ? AppColors.textPrimary : AppColors.textPrimaryLight;
@@ -107,7 +107,7 @@ class JournalScreenState extends State<JournalScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('مذكرة جديدة', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('New Entry', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: _moods.map((m) => GestureDetector(
                   onTap: () => setModalState(() => _mood = m['label']!),
@@ -118,23 +118,23 @@ class JournalScreenState extends State<JournalScreen> {
                   ]),
                 )).toList()),
                 const SizedBox(height: 16),
-                TextField(controller: _titleController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), decoration: InputDecoration(hintText: 'عنوان المذكرة', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                TextField(controller: _titleController, style: TextStyle(color: textColor), decoration: InputDecoration(hintText: 'Entry title', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
                 const SizedBox(height: 12),
-                TextField(controller: _contentController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), maxLines: 6, decoration: InputDecoration(hintText: 'اكتب مذكرة اليوم...', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                TextField(controller: _contentController, style: TextStyle(color: textColor), maxLines: 6, decoration: InputDecoration(hintText: 'Write today\'s entry...', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
                 const SizedBox(height: 16),
                 SizedBox(width: double.infinity, child: ElevatedButton(
                   onPressed: () {
                     if (_contentController.text.trim().isEmpty) return;
                     Provider.of<JournalProvider>(context, listen: false).addEntry(JournalEntry(
                       id: const Uuid().v4(),
-                      title: _titleController.text.trim().isEmpty ? 'مذكرة' : _titleController.text.trim(),
+                      title: _titleController.text.trim().isEmpty ? 'Journal' : _titleController.text.trim(),
                       content: _contentController.text.trim(),
                       mood: _mood,
                       date: DateTime.now(),
                     ));
                     Navigator.pop(context);
                   },
-                  child: const Text('حفظ المذكرة'),
+                  child: const Text('Save Entry'),
                 )),
               ],
             ),

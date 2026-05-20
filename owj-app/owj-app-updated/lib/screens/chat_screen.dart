@@ -128,7 +128,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 16),
             Text(
-              'اختار موديل الذكاء الاصطناعي',
+              'Choose AI Model',
               style: TextStyle(color: AppColors.gold, fontSize: 17, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -226,7 +226,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           if (!hasKey)
-                            Text('لا يوجد API', style: TextStyle(color: Colors.grey, fontSize: 10))
+                            Text('No API Key', style: TextStyle(color: Colors.grey, fontSize: 10))
                           else if (isSelected)
                             Icon(Icons.check_circle, color: AppColors.gold, size: 22),
                         ],
@@ -247,17 +247,17 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('مسح المحادثة', textDirection: TextDirection.rtl),
-        content: const Text('هتمسح كل الرسائل؟', textDirection: TextDirection.rtl),
+        title: const Text('Clear Chat'),
+        content: const Text('Clear all messages?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               Provider.of<ChatProvider>(context, listen: false).clearMessages();
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('مسح'),
+            child: const Text('Clear'),
           ),
         ],
       ),
@@ -267,7 +267,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void showNotificationsSheet(BuildContext context, NotificationProvider provider, bool isDark) {
     if (provider.notifications.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('مفيش إشعارات دلوقتي'), duration: Duration(seconds: 2)),
+        const SnackBar(content: Text('No notifications right now'), duration: Duration(seconds: 2)),
       );
       return;
     }
@@ -289,12 +289,12 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 children: [
                   TextButton(
                     onPressed: () { provider.markAllAsRead(); Navigator.pop(ctx); },
-                    child: Text('قرأت الكل', style: TextStyle(color: AppColors.gold, fontSize: 12)),
+                    child: Text('Mark all read', style: TextStyle(color: AppColors.gold, fontSize: 12)),
                   ),
-                  Text('الإشعارات', style: TextStyle(color: AppColors.gold, fontSize: 17, fontWeight: FontWeight.bold)),
+                  Text('Notifications', style: TextStyle(color: AppColors.gold, fontSize: 17, fontWeight: FontWeight.bold)),
                   TextButton(
                     onPressed: () { provider.clearAll(); Navigator.pop(ctx); },
-                    child: Text('مسح الكل', style: TextStyle(color: AppColors.error, fontSize: 12)),
+                    child: Text('Clear all', style: TextStyle(color: AppColors.error, fontSize: 12)),
                   ),
                 ],
               ),
@@ -316,11 +316,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         fontWeight: n.isRead ? FontWeight.normal : FontWeight.bold,
                         fontSize: 14,
                       ),
-                      textDirection: TextDirection.rtl,
                     ),
                     subtitle: Text(n.body,
                       style: TextStyle(color: isDark ? Colors.white60 : Colors.black54, fontSize: 12),
-                      textDirection: TextDirection.rtl,
                     ),
                     trailing: !n.isRead
                         ? Container(width: 8, height: 8, decoration: BoxDecoration(color: AppColors.gold, shape: BoxShape.circle))
@@ -367,7 +365,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     color: AppColors.gold.withOpacity(0.15),
                     child: Text(
-                      'يستخدم: ${chat.activeProvider} · ${AppConstants.aiModels[apiKeys.selectedModel] ?? ''}',
+                      'Using: ${chat.activeProvider} · ${AppConstants.aiModels[apiKeys.selectedModel] ?? ''}',
                       style: TextStyle(color: AppColors.gold, fontSize: 11),
                       textAlign: TextAlign.center,
                     ),
@@ -382,7 +380,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       children: [
                         SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.info)),
                         const SizedBox(width: 8),
-                        Text('ببحث عن: ${chat.searchQuery}', style: TextStyle(color: AppColors.info, fontSize: 12)),
+                        Text('Searching for: ${chat.searchQuery}', style: TextStyle(color: AppColors.info, fontSize: 12)),
                       ],
                     ),
                   ),
@@ -502,24 +500,23 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(char['name'] ?? 'أوج', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.gold)),
+              Text(char['name'] ?? 'OWJ', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.gold)),
               const SizedBox(height: 8),
               Text(
                 char['desc'] ?? '',
                 style: TextStyle(fontSize: 14, color: isDark ? Colors.white60 : Colors.black54, height: 1.5),
                 textAlign: TextAlign.center,
-                textDirection: TextDirection.rtl,
               ),
               const SizedBox(height: 24),
-              _suggestionChip('ضفلي مهمة أخلص المشروع', isDark),
+              _suggestionChip('Add a task to finish my project', isDark),
               const SizedBox(height: 8),
-              _suggestionChip('اعململ خطة ليومي', isDark),
+              _suggestionChip('Make a plan for my day', isDark),
               const SizedBox(height: 8),
-              _suggestionChip('ابحثلي عن أحدث أخبار التقنية', isDark),
+              _suggestionChip('Search for latest tech news', isDark),
               const SizedBox(height: 8),
-              _suggestionChip('ساعدني أنظم أهدافي', isDark),
+              _suggestionChip('Help me organize my goals', isDark),
               const SizedBox(height: 8),
-              _suggestionChip('ضفلي عادة شرب المية', isDark),
+              _suggestionChip('Add a habit of drinking water', isDark),
             ],
           ),
         ),
@@ -583,7 +580,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(msg.content, style: TextStyle(color: isUser ? AppColors.gold : textColor, fontSize: 15, height: 1.5), textDirection: TextDirection.rtl),
+                  Text(msg.content, style: TextStyle(color: isUser ? AppColors.gold : textColor, fontSize: 15, height: 1.5)),
                   if (msg.provider != null && !isUser) ...[
                     const SizedBox(height: 4),
                     Text(msg.provider!, style: TextStyle(color: AppColors.textSecondary, fontSize: 9), textDirection: TextDirection.ltr),
@@ -659,12 +656,11 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           Expanded(
             child: TextField(
               controller: _controller,
-              textDirection: TextDirection.rtl,
               style: TextStyle(color: textColor, fontSize: 15),
               maxLines: 4,
               minLines: 1,
               decoration: InputDecoration(
-                hintText: 'اكتب رسالتك...',
+                hintText: 'Type your message...',
                 hintStyle: TextStyle(color: hintColor),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
                 filled: true,

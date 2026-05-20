@@ -57,7 +57,7 @@ class ChatProvider extends ChangeNotifier {
   final SharedPreferences prefs;
   List<ChatMessage> _messages = [];
   bool _isLoading = false;
-  String _currentCharacter = 'وصال';
+  String _currentCharacter = 'Wesal';
   String _activeProvider = '';
   String _errorMessage = '';
   List<ToolResult> _toolResults = [];
@@ -108,7 +108,7 @@ class ChatProvider extends ChangeNotifier {
         _messages = [];
       }
     }
-    _currentCharacter = prefs.getString('active_character') ?? 'وصال';
+    _currentCharacter = prefs.getString('active_character') ?? 'Wesal';
     notifyListeners();
   }
 
@@ -181,8 +181,8 @@ class ChatProvider extends ChangeNotifier {
           dueDate: DateTime.now(),
           priority: 'medium',
         ));
-        results.add(ToolResult(type: 'مهمة', title: title, success: true));
-        _notificationProvider?.notifyAIAction('مهمة', title);
+        results.add(ToolResult(type: 'Task', title: title, success: true));
+        _notificationProvider?.notifyAIAction('Task', title);
       }
     }
 
@@ -195,8 +195,8 @@ class ChatProvider extends ChangeNotifier {
           title: title,
           deadline: DateTime.now().add(const Duration(days: 30)),
         ));
-        results.add(ToolResult(type: 'هدف', title: title, success: true));
-        _notificationProvider?.notifyAIAction('هدف', title);
+        results.add(ToolResult(type: 'Goal', title: title, success: true));
+        _notificationProvider?.notifyAIAction('Goal', title);
       }
     }
 
@@ -208,8 +208,8 @@ class ChatProvider extends ChangeNotifier {
           id: const Uuid().v4(),
           name: name,
         ));
-        results.add(ToolResult(type: 'عادة', title: name, success: true));
-        _notificationProvider?.notifyAIAction('عادة', name);
+        results.add(ToolResult(type: 'Habit', title: name, success: true));
+        _notificationProvider?.notifyAIAction('Habit', name);
       }
     }
 
@@ -220,11 +220,11 @@ class ChatProvider extends ChangeNotifier {
         _journalProvider!.addEntry(JournalEntry(
           id: const Uuid().v4(),
           title: title,
-          content: 'تم إنشاء هذه المذكرة من الشات',
+          content: 'Created from chat',
           date: DateTime.now(),
         ));
-        results.add(ToolResult(type: 'مذكرة', title: title, success: true));
-        _notificationProvider?.notifyAIAction('مذكرة', title);
+        results.add(ToolResult(type: 'Journal', title: title, success: true));
+        _notificationProvider?.notifyAIAction('Journal', title);
       }
     }
 
@@ -233,7 +233,7 @@ class ChatProvider extends ChangeNotifier {
 
   Future<String> _searchWeb(String query, ApiKeysProvider apiKeys) async {
     final tavilyKey = apiKeys.getKey(AppConstants.tavilyKey);
-    if (tavilyKey.isEmpty) return 'مفيش مفتاح بحث متاح';
+    if (tavilyKey.isEmpty) return 'No search key available';
 
     _isSearching = true;
     _searchQuery = query;
@@ -260,15 +260,15 @@ class ChatProvider extends ChangeNotifier {
         if (answer.isNotEmpty) return answer;
 
         final results = data['results'] as List? ?? [];
-        if (results.isEmpty) return 'مفيش نتائج';
+        if (results.isEmpty) return 'No results found';
 
         return results.map((r) => r['content'] ?? '').where((c) => c.isNotEmpty).take(3).join('\n\n');
       }
-      return 'حصل خطأ في البحث';
+      return 'Search error';
     } catch (e) {
       _isSearching = false;
       notifyListeners();
-      return 'حصل خطأ في البحث: ${e.toString()}';
+      return 'Search error: ${e.toString()}';
     }
   }
 
@@ -293,7 +293,7 @@ class ChatProvider extends ChangeNotifier {
       if (searchMatch != null) {
         final query = searchMatch.group(1)?.trim() ?? content;
         final searchResults = await _searchWeb(query, apiKeys);
-        messageToSend = 'المستخدم سأل: $content\n\nنتائج البحث:\n$searchResults\n\nجاوب بناء على نتائج البحث دي بالعربي المصري.';
+        messageToSend = 'User asked: $content\n\nSearch results:\n$searchResults\n\nAnswer based on these search results in English.';
       }
 
       final response = await _callAI(messageToSend, apiKeys);
@@ -319,7 +319,7 @@ class ChatProvider extends ChangeNotifier {
 
       final aiMsg = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: displayText.isEmpty ? 'تم التنفيذ!' : displayText,
+        content: displayText.isEmpty ? 'Done!' : displayText,
         isUser: false,
         timestamp: DateTime.now(),
         character: _currentCharacter,
@@ -327,7 +327,7 @@ class ChatProvider extends ChangeNotifier {
       );
       _messages.add(aiMsg);
     } catch (e) {
-      _errorMessage = 'حصل خطأ: ${e.toString()}';
+      _errorMessage = 'Error: ${e.toString()}';
       final errorMsg = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         content: _errorMessage,
@@ -406,7 +406,7 @@ class ChatProvider extends ChangeNotifier {
       }
     }
 
-    throw Exception('مفيش مفتاح API شغال. روح الإعدادات وضبط المفاتيح');
+    throw Exception('No working API key. Go to Settings and configure your keys.');
   }
 
   /// Multi-model parallel call for different task types
@@ -443,7 +443,7 @@ class ChatProvider extends ChangeNotifier {
           }
           results[model] = _cleanAIResponse(response);
         } catch (e) {
-          results[model] = 'فشل: ${e.toString()}';
+          results[model] = 'Failed: ${e.toString()}';
         }
       }());
     }
@@ -465,7 +465,7 @@ class ChatProvider extends ChangeNotifier {
 
     conversationHistory.insert(0, {
       'role': 'user',
-      'parts': [{'text': 'تعليمات النظام: $systemPrompt\n\nرسالة المستخدم: $message'}]
+      'parts': [{'text': 'System instructions: $systemPrompt\n\nUser message: $message'}]
     });
 
     if (conversationHistory.length > 1) {
@@ -489,9 +489,9 @@ class ChatProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['candidates']?[0]['content']['parts'][0]['text'] ?? 'مفيش رد';
+      return data['candidates']?[0]['content']['parts'][0]['text'] ?? 'No response';
     } else {
-      throw Exception('خطأ Gemini: ${response.statusCode}');
+      throw Exception('Gemini error: ${response.statusCode}');
     }
   }
 
@@ -531,9 +531,9 @@ class ChatProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['choices'][0]['message']['content'] ?? 'مفيش رد';
+      return data['choices'][0]['message']['content'] ?? 'No response';
     } else {
-      throw Exception('خطأ $model: ${response.statusCode}');
+      throw Exception('$model error: ${response.statusCode}');
     }
   }
 }

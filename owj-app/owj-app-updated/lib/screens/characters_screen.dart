@@ -125,17 +125,17 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
               children: [
                 Row(
                   children: [
-                    Text(char['name'] ?? '', style: TextStyle(color: AppColors.gold, fontSize: 22, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
+                    Text(char['name'] ?? '', style: TextStyle(color: AppColors.gold, fontSize: 22, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: AppColors.gold.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                      child: const Text('نشط الآن', style: TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold)),
+                      child: const Text('Active Now', style: TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(char['desc'] ?? '', style: TextStyle(color: subColor, fontSize: 12, height: 1.5), textDirection: TextDirection.rtl, maxLines: 3, overflow: TextOverflow.ellipsis),
+                Text(char['desc'] ?? '', style: TextStyle(color: subColor, fontSize: 12, height: 1.5), maxLines: 3, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -164,7 +164,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
           _selectionController.forward(from: 0);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${char['emoji']} ${char['name']} أصبح نشطاً'),
+              content: Text('${char['emoji']} ${char['name']} is now active'),
               backgroundColor: AppColors.success,
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
@@ -209,14 +209,12 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                   Text(
                     char['name'] ?? '',
                     style: TextStyle(color: isActive ? AppColors.gold : textColor, fontSize: 15, fontWeight: FontWeight.bold),
-                    textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 6),
                   Text(
                     char['desc'] ?? '',
                     style: TextStyle(color: subColor, fontSize: 10, height: 1.4),
-                    textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -241,7 +239,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(color: AppColors.info.withOpacity(0.2), borderRadius: BorderRadius.circular(4)),
-                  child: Text('مخصص', style: TextStyle(color: AppColors.info, fontSize: 9)),
+                  child: Text('Custom', style: TextStyle(color: AppColors.info, fontSize: 9)),
                 ),
               ),
           ],
@@ -254,17 +252,17 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('حذف الشخصية', textDirection: TextDirection.rtl),
-        content: Text('هتحذف شخصية "$name"؟', textDirection: TextDirection.rtl),
+        title: const Text('Delete Character'),
+        content: Text('Delete character "$name"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               provider.removeCustomCharacter(customIndex);
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('حذف'),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -288,7 +286,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
             Icon(Icons.add_circle_outline, color: AppColors.gold),
             const SizedBox(width: 8),
             Text(
-              'إضافة شخصية مخصصة (${provider.customCharacters.length}/5)',
+              'Add Custom Character (${provider.customCharacters.length}/5)',
               style: TextStyle(color: AppColors.gold, fontSize: 14),
             ),
           ],
@@ -324,7 +322,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                 children: [
                   Container(width: 40, height: 4, decoration: BoxDecoration(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, borderRadius: BorderRadius.circular(2))),
                   const SizedBox(height: 16),
-                  Text('شخصية مخصصة جديدة', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('New Custom Character', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   // Selected emoji display
                   Container(
@@ -356,10 +354,9 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                   const SizedBox(height: 16),
                   TextField(
                     controller: nameController,
-                    textDirection: TextDirection.rtl,
                     style: TextStyle(color: textColor),
                     decoration: InputDecoration(
-                      hintText: 'اسم الشخصية', hintStyle: TextStyle(color: hintColor),
+                      hintText: 'Character name', hintStyle: TextStyle(color: hintColor),
                       filled: true, fillColor: cardBg,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                       prefixIcon: Icon(Icons.badge_outlined, color: hintColor),
@@ -368,11 +365,10 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                   const SizedBox(height: 10),
                   TextField(
                     controller: descController,
-                    textDirection: TextDirection.rtl,
                     style: TextStyle(color: textColor),
                     maxLines: 2,
                     decoration: InputDecoration(
-                      hintText: 'وصف مختصر (بيظهر في البطاقة)', hintStyle: TextStyle(color: hintColor),
+                      hintText: 'Short description (shown on card)', hintStyle: TextStyle(color: hintColor),
                       filled: true, fillColor: cardBg,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
@@ -380,11 +376,10 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                   const SizedBox(height: 10),
                   TextField(
                     controller: systemController,
-                    textDirection: TextDirection.rtl,
                     style: TextStyle(color: textColor),
                     maxLines: 5,
                     decoration: InputDecoration(
-                      hintText: 'تعليمات النظام - كيف تتكلم؟ إيه أسلوبها؟ إيه شخصيتها؟', hintStyle: TextStyle(color: hintColor, fontSize: 12),
+                      hintText: 'System instructions - How should it speak? What style? What personality?', hintStyle: TextStyle(color: hintColor, fontSize: 12),
                       filled: true, fillColor: cardBg,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
@@ -394,7 +389,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('إضافة الشخصية'),
+                      label: const Text('Add Character'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.gold,
                         foregroundColor: AppColors.darkBg,
@@ -404,7 +399,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                       onPressed: () {
                         if (nameController.text.trim().isEmpty || systemController.text.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('الاسم وتعليمات النظام مطلوبين'), backgroundColor: Colors.red),
+                            const SnackBar(content: Text('Name and system instructions are required'), backgroundColor: Colors.red),
                           );
                           return;
                         }
@@ -416,7 +411,7 @@ class CharactersScreenState extends State<CharactersScreen> with TickerProviderS
                         });
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('$emoji ${nameController.text.trim()} تمت إضافتها'), backgroundColor: AppColors.success),
+                          SnackBar(content: Text('$emoji ${nameController.text.trim()} has been added'), backgroundColor: AppColors.success),
                         );
                       },
                     ),

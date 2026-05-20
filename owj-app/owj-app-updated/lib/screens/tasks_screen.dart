@@ -49,9 +49,9 @@ class TasksScreenState extends State<TasksScreen> with SingleTickerProviderState
             unselectedLabelColor: subColor,
             indicatorColor: AppColors.gold,
             tabs: const [
-              Tab(text: 'كل المهام'),
-              Tab(text: 'قيد التنفيذ'),
-              Tab(text: 'مكتملة'),
+              Tab(text: 'All Tasks'),
+              Tab(text: 'In Progress'),
+              Tab(text: 'Completed'),
             ],
           ),
         ),
@@ -79,7 +79,7 @@ class TasksScreenState extends State<TasksScreen> with SingleTickerProviderState
           children: [
             Icon(Icons.task_alt, size: 64, color: subColor),
             const SizedBox(height: 16),
-            Text('مفيش مهام لسه', style: TextStyle(color: subColor, fontSize: 16)),
+            Text('No tasks yet', style: TextStyle(color: subColor, fontSize: 16)),
           ],
         ),
       );
@@ -131,18 +131,17 @@ class TasksScreenState extends State<TasksScreen> with SingleTickerProviderState
                 children: [
                   Text(task.title,
                     style: TextStyle(color: task.isCompleted ? subColor : textColor, fontSize: 15, fontWeight: FontWeight.w600, decoration: task.isCompleted ? TextDecoration.lineThrough : null),
-                    textDirection: TextDirection.rtl,
                   ),
                   if (task.description.isNotEmpty) ...[
                     const SizedBox(height: 4),
-                    Text(task.description, style: TextStyle(color: subColor, fontSize: 12), textDirection: TextDirection.rtl),
+                    Text(task.description, style: TextStyle(color: subColor, fontSize: 12)),
                   ],
                   const SizedBox(height: 6),
                   Row(children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(color: priorityColor.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                      child: Text(task.priority == 'high' ? 'عالي' : task.priority == 'medium' ? 'متوسط' : 'منخفض', style: TextStyle(color: priorityColor, fontSize: 10)),
+                      child: Text(task.priority == 'high' ? 'High' : task.priority == 'medium' ? 'Medium' : 'Low', style: TextStyle(color: priorityColor, fontSize: 10)),
                     ),
                     const SizedBox(width: 8),
                     Container(
@@ -182,26 +181,26 @@ class TasksScreenState extends State<TasksScreen> with SingleTickerProviderState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('إضافة مهمة جديدة', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('Add New Task', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 TextField(
-                  controller: _titleController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor),
-                  decoration: InputDecoration(hintText: 'عنوان المهمة', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                  controller: _titleController, style: TextStyle(color: textColor),
+                  decoration: InputDecoration(hintText: 'Task title', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
                 ),
                 const SizedBox(height: 12),
                 TextField(
-                  controller: _descController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), maxLines: 3,
-                  decoration: InputDecoration(hintText: 'وصف المهمة (اختياري)', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                  controller: _descController, style: TextStyle(color: textColor), maxLines: 3,
+                  decoration: InputDecoration(hintText: 'Task description (optional)', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
                 ),
                 const SizedBox(height: 12),
                 Row(children: [
-                  Text('الأولوية:', style: TextStyle(color: hintColor)),
+                  Text('Priority:', style: TextStyle(color: hintColor)),
                   const SizedBox(width: 8),
-                  _priorityChip('عالي', 'high', setModalState, isDark),
+                  _priorityChip('High', 'high', setModalState, isDark),
                   const SizedBox(width: 4),
-                  _priorityChip('متوسط', 'medium', setModalState, isDark),
+                  _priorityChip('Medium', 'medium', setModalState, isDark),
                   const SizedBox(width: 4),
-                  _priorityChip('منخفض', 'low', setModalState, isDark),
+                  _priorityChip('Low', 'low', setModalState, isDark),
                 ]),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -218,7 +217,7 @@ class TasksScreenState extends State<TasksScreen> with SingleTickerProviderState
                       ));
                       Navigator.pop(context);
                     },
-                    child: const Text('إضافة المهمة'),
+                    child: const Text('Add Task'),
                   ),
                 ),
               ],

@@ -39,9 +39,9 @@ class GoalsScreenState extends State<GoalsScreen> {
               children: [
                 Icon(Icons.flag, size: 64, color: subColor),
                 const SizedBox(height: 16),
-                Text('مفيش أهداف لسه', style: TextStyle(color: subColor, fontSize: 16)),
+                Text('No goals yet', style: TextStyle(color: subColor, fontSize: 16)),
                 const SizedBox(height: 8),
-                Text('اضغط + عشان تضيف هدف جديد', style: TextStyle(color: subColor, fontSize: 13)),
+                Text('Tap + to add a new goal', style: TextStyle(color: subColor, fontSize: 13)),
               ],
             ),
           );
@@ -70,13 +70,13 @@ class GoalsScreenState extends State<GoalsScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(children: [
-              Expanded(child: Text(goal.title, style: TextStyle(color: goal.isCompleted ? AppColors.success : textColor, fontSize: 17, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl)),
+              Expanded(child: Text(goal.title, style: TextStyle(color: goal.isCompleted ? AppColors.success : textColor, fontSize: 17, fontWeight: FontWeight.bold))),
               if (goal.isCompleted) const Icon(Icons.check_circle, color: AppColors.success),
               IconButton(icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20), onPressed: () => provider.deleteGoal(goal.id)),
             ]),
             if (goal.description.isNotEmpty) ...[
               const SizedBox(height: 6),
-              Text(goal.description, style: TextStyle(color: subColor, fontSize: 13), textDirection: TextDirection.rtl),
+              Text(goal.description, style: TextStyle(color: subColor, fontSize: 13)),
             ],
             const SizedBox(height: 12),
             Row(children: [
@@ -124,14 +124,14 @@ class GoalsScreenState extends State<GoalsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('إضافة هدف جديد', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('Add New Goal', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                TextField(controller: _titleController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), decoration: InputDecoration(hintText: 'عنوان الهدف', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                TextField(controller: _titleController, style: TextStyle(color: textColor), decoration: InputDecoration(hintText: 'Goal title', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
                 const SizedBox(height: 12),
-                TextField(controller: _descController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), maxLines: 2, decoration: InputDecoration(hintText: 'وصف الهدف', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                TextField(controller: _descController, style: TextStyle(color: textColor), maxLines: 2, decoration: InputDecoration(hintText: 'Goal description', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
                 const SizedBox(height: 12),
                 Row(children: [
-                  Expanded(child: TextField(controller: _milestoneController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor, fontSize: 13), decoration: InputDecoration(hintText: 'إضافة معلم', hintStyle: TextStyle(color: hintColor, fontSize: 13), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10)))),
+                  Expanded(child: TextField(controller: _milestoneController, style: TextStyle(color: textColor, fontSize: 13), decoration: InputDecoration(hintText: 'Add milestone', hintStyle: TextStyle(color: hintColor, fontSize: 13), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), isDense: true, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10)))),
                   const SizedBox(width: 8),
                   IconButton(icon: const Icon(Icons.add_circle, color: AppColors.gold), onPressed: () { if (_milestoneController.text.trim().isNotEmpty) { setModalState(() => milestones.add(_milestoneController.text.trim())); _milestoneController.clear(); } }),
                 ]),
@@ -146,7 +146,7 @@ class GoalsScreenState extends State<GoalsScreen> {
                     Provider.of<GoalsProvider>(context, listen: false).addGoal(Goal(id: const Uuid().v4(), title: _titleController.text.trim(), description: _descController.text.trim(), deadline: DateTime.now().add(const Duration(days: 30)), milestones: milestones));
                     Navigator.pop(context);
                   },
-                  child: const Text('إضافة الهدف'),
+                  child: const Text('Add Goal'),
                 )),
               ],
             ),

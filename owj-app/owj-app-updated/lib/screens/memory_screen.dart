@@ -16,12 +16,12 @@ class MemoryScreen extends StatefulWidget {
 class MemoryScreenState extends State<MemoryScreen> {
   final _contentController = TextEditingController();
   final _searchController = TextEditingController();
-  String _category = 'شخصي';
+  String _category = 'Personal';
   final _tagController = TextEditingController();
   bool _isSearching = false;
   List<MemoryItem> _searchResults = [];
 
-  final List<String> _categories = ['شخصي', 'عمل', 'تعلم', 'صحي', 'مالي', 'اجتماعي'];
+  final List<String> _categories = ['Personal', 'Work', 'Learning', 'Health', 'Finance', 'Social'];
 
   bool get isSearching => _isSearching;
 
@@ -61,9 +61,9 @@ class MemoryScreenState extends State<MemoryScreen> {
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
-                controller: _searchController, textDirection: TextDirection.rtl,
+                controller: _searchController,
                 style: TextStyle(color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight),
-                decoration: InputDecoration(hintText: 'ابحث في الذاكرة...', hintStyle: TextStyle(color: subColor), filled: true, fillColor: isDark ? AppColors.darkCard : AppColors.lightCard, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), prefixIcon: const Icon(Icons.search, color: AppColors.gold)),
+                decoration: InputDecoration(hintText: 'Search memories...', hintStyle: TextStyle(color: subColor), filled: true, fillColor: isDark ? AppColors.darkCard : AppColors.lightCard, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), prefixIcon: const Icon(Icons.search, color: AppColors.gold)),
                 onChanged: (query) => setState(() => _searchResults = query.isEmpty ? [] : provider.searchMemories(query)),
               ),
             ),
@@ -83,7 +83,7 @@ class MemoryScreenState extends State<MemoryScreen> {
   }
 
   Widget _buildMemoryList(MemoryProvider provider, bool isDark) {
-    final items = _isSearching && _searchResults.isNotEmpty ? _searchResults : _category != 'شخصي' || _isSearching ? provider.getByCategory(_category) : provider.memories;
+    final items = _isSearching && _searchResults.isNotEmpty ? _searchResults : _category != 'Personal' || _isSearching ? provider.getByCategory(_category) : provider.memories;
     final subColor = isDark ? AppColors.textSecondary : AppColors.textSecondaryLight;
     final cardColor = isDark ? AppColors.darkCard : AppColors.lightCard;
     final textColor = isDark ? AppColors.textPrimary : AppColors.textPrimaryLight;
@@ -92,7 +92,7 @@ class MemoryScreenState extends State<MemoryScreen> {
       return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(Icons.psychology, size: 64, color: subColor),
         const SizedBox(height: 16),
-        Text('مفيش ذكريات لسه', style: TextStyle(color: subColor, fontSize: 16)),
+        Text('No memories yet', style: TextStyle(color: subColor, fontSize: 16)),
       ]));
     }
 
@@ -105,7 +105,7 @@ class MemoryScreenState extends State<MemoryScreen> {
           padding: const EdgeInsets.all(14),
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Row(children: [
-              Expanded(child: Text(memory.content, style: TextStyle(color: textColor, fontSize: 14, height: 1.5), textDirection: TextDirection.rtl, maxLines: 3, overflow: TextOverflow.ellipsis)),
+              Expanded(child: Text(memory.content, style: TextStyle(color: textColor, fontSize: 14, height: 1.5), maxLines: 3, overflow: TextOverflow.ellipsis)),
               IconButton(icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 18), onPressed: () => provider.deleteMemory(memory.id)),
             ]),
             const SizedBox(height: 8),
@@ -140,14 +140,14 @@ class MemoryScreenState extends State<MemoryScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('إضافة ذكرى', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('Add Memory', style: TextStyle(color: AppColors.gold, fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
                 Wrap(spacing: 6, runSpacing: 6, children: _categories.map((cat) => ChoiceChip(label: Text(cat, style: TextStyle(fontSize: 12)), selected: _category == cat, selectedColor: AppColors.gold, labelStyle: TextStyle(color: _category == cat ? AppColors.darkBg : hintColor), onSelected: (_) => setModalState(() => _category = cat))).toList()),
                 const SizedBox(height: 12),
-                TextField(controller: _contentController, textDirection: TextDirection.rtl, style: TextStyle(color: textColor), maxLines: 4, decoration: InputDecoration(hintText: 'اكتب الذكرى...', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                TextField(controller: _contentController, style: TextStyle(color: textColor), maxLines: 4, decoration: InputDecoration(hintText: 'Write a memory...', hintStyle: TextStyle(color: hintColor), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
                 const SizedBox(height: 12),
                 Row(children: [
-                  Expanded(child: TextField(controller: _tagController, style: TextStyle(color: textColor, fontSize: 13), decoration: InputDecoration(hintText: 'إضافة تاج', hintStyle: TextStyle(color: hintColor, fontSize: 13), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), isDense: true))),
+                  Expanded(child: TextField(controller: _tagController, style: TextStyle(color: textColor, fontSize: 13), decoration: InputDecoration(hintText: 'Add tag', hintStyle: TextStyle(color: hintColor, fontSize: 13), filled: true, fillColor: cardBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none), isDense: true))),
                   const SizedBox(width: 8),
                   IconButton(icon: const Icon(Icons.add_circle, color: AppColors.gold), onPressed: () { if (_tagController.text.trim().isNotEmpty) { setModalState(() => tags.add(_tagController.text.trim())); _tagController.clear(); } }),
                 ]),
@@ -162,7 +162,7 @@ class MemoryScreenState extends State<MemoryScreen> {
                     Provider.of<MemoryProvider>(context, listen: false).addMemory(MemoryItem(id: const Uuid().v4(), content: _contentController.text.trim(), category: _category, createdAt: DateTime.now(), tags: tags));
                     Navigator.pop(context);
                   },
-                  child: const Text('حفظ الذكرى'),
+                  child: const Text('Save Memory'),
                 )),
               ],
             ),

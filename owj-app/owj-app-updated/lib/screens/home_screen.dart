@@ -38,14 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final _settingsKey = GlobalKey<SettingsScreenState>();
 
   final List<_NavItem> _navItems = [
-    _NavItem('الشات', Icons.chat_bubble_rounded),
-    _NavItem('المهام', Icons.task_alt_rounded),
-    _NavItem('الأهداف', Icons.flag_rounded),
-    _NavItem('العادات', Icons.repeat_rounded),
-    _NavItem('المذكرات', Icons.book_rounded),
-    _NavItem('الذاكرة', Icons.psychology_rounded),
-    _NavItem('الشخصيات', Icons.smart_toy_rounded),
-    _NavItem('الإعدادات', Icons.settings_rounded),
+    _NavItem('Chat', Icons.chat_bubble_rounded),
+    _NavItem('Tasks', Icons.task_alt_rounded),
+    _NavItem('Goals', Icons.flag_rounded),
+    _NavItem('Habits', Icons.repeat_rounded),
+    _NavItem('Journal', Icons.book_rounded),
+    _NavItem('Memory', Icons.psychology_rounded),
+    _NavItem('Characters', Icons.smart_toy_rounded),
+    _NavItem('Settings', Icons.settings_rounded),
   ];
 
   @override
@@ -140,21 +140,21 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return _buildChatAppBar(isDark);
       case 1:
-        return AppBar(title: const Text('المهام'));
+        return AppBar(title: const Text('Tasks'));
       case 2:
-        return AppBar(title: const Text('الأهداف'));
+        return AppBar(title: const Text('Goals'));
       case 3:
-        return AppBar(title: const Text('العادات'));
+        return AppBar(title: const Text('Habits'));
       case 4:
-        return AppBar(title: const Text('المذكرات'));
+        return AppBar(title: const Text('Journal'));
       case 5:
         return _buildMemoryAppBar(isDark);
       case 6:
-        return AppBar(title: const Text('الشخصيات'));
+        return AppBar(title: const Text('Characters'));
       case 7:
-        return AppBar(title: const Text('الإعدادات'));
+        return AppBar(title: const Text('Settings'));
       default:
-        return AppBar(title: const Text('أوج'));
+        return AppBar(title: const Text('OWJ'));
     }
   }
 
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(char['emoji'] ?? '', style: const TextStyle(fontSize: 20)),
             const SizedBox(width: 6),
-            Text(char['name'] ?? 'أوج', style: const TextStyle(fontSize: 18)),
+            Text(char['name'] ?? 'OWJ', style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isSearching = _memoryKey.currentState?.isSearching ?? false;
 
     return AppBar(
-      title: const Text('الذاكرة'),
+      title: const Text('Memory'),
       actions: [
         IconButton(
           icon: Icon(isSearching ? Icons.close : Icons.search),

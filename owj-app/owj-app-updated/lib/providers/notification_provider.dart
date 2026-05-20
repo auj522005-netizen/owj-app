@@ -110,45 +110,45 @@ class NotificationProvider extends ChangeNotifier {
   // Helper: add from AI action
   void notifyAIAction(String actionType, String itemTitle) {
     final messages = {
-      'مهمة': 'تمت إضافة المهمة: $itemTitle',
-      'هدف': 'تمت إضافة الهدف: $itemTitle',
-      'عادة': 'تمت إضافة العادة: $itemTitle',
-      'مذكرة': 'تمت إضافة المذكرة: $itemTitle',
+      'Task': 'Task added: $itemTitle',
+      'Goal': 'Goal added: $itemTitle',
+      'Habit': 'Habit added: $itemTitle',
+      'Journal': 'Journal added: $itemTitle',
     };
     addNotification(
-      title: messages[actionType] ?? 'تمت إضافة: $itemTitle',
-      body: 'الذكاء الاصطناعي قام بتنفيذ الأمر تلقائياً',
+      title: messages[actionType] ?? 'Added: $itemTitle',
+      body: 'AI executed the command automatically',
       type: actionType,
     );
   }
 
   IconData getIconForType(String type) {
     switch (type) {
-      case 'مهمة': return Icons.task_alt;
-      case 'هدف': return Icons.flag;
-      case 'عادة': return Icons.repeat;
-      case 'تذكير': return Icons.notifications_active;
-      case 'مذكرة': return Icons.book;
+      case 'Task': return Icons.task_alt;
+      case 'Goal': return Icons.flag;
+      case 'Habit': return Icons.repeat;
+      case 'Reminder': return Icons.notifications_active;
+      case 'Journal': return Icons.book;
       default: return Icons.notifications;
     }
   }
 
   Color getColorForType(String type) {
     switch (type) {
-      case 'مهمة': return AppColors.warning;
-      case 'هدف': return AppColors.gold;
-      case 'عادة': return AppColors.success;
-      case 'تذكير': return AppColors.info;
-      case 'مذكرة': return const Color(0xFF9B59B6);
+      case 'Task': return AppColors.warning;
+      case 'Goal': return AppColors.gold;
+      case 'Habit': return AppColors.success;
+      case 'Reminder': return AppColors.info;
+      case 'Journal': return const Color(0xFF9B59B6);
       default: return AppColors.gold;
     }
   }
 
   String timeAgo(DateTime time) {
     final diff = DateTime.now().difference(time);
-    if (diff.inSeconds < 60) return 'الآن';
-    if (diff.inMinutes < 60) return 'منذ ${diff.inMinutes} دقيقة';
-    if (diff.inHours < 24) return 'منذ ${diff.inHours} ساعة';
-    return 'منذ ${diff.inDays} يوم';
+    if (diff.inSeconds < 60) return 'Now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
   }
 }

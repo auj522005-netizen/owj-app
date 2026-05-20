@@ -6,7 +6,7 @@ class JournalEntry {
   final String id;
   String title;
   String content;
-  String mood; // سعيد، حزين، عادي، متحمس، قلق
+  String mood; // Happy, Sad, Normal, Excited, Anxious
   DateTime date;
   List<String> tags;
 
@@ -14,7 +14,7 @@ class JournalEntry {
     required this.id,
     required this.title,
     this.content = '',
-    this.mood = 'عادي',
+    this.mood = 'Normal',
     required this.date,
     this.tags = const [],
   });
@@ -26,7 +26,7 @@ class JournalEntry {
 
   factory JournalEntry.fromJson(Map<String, dynamic> json) => JournalEntry(
     id: json['id'], title: json['title'], content: json['content'] ?? '',
-    mood: json['mood'] ?? 'عادي', date: DateTime.parse(json['date']),
+    mood: json['mood'] ?? 'Normal', date: DateTime.parse(json['date']),
     tags: List<String>.from(json['tags'] ?? []),
   );
 }
