@@ -8,14 +8,14 @@ import '../core/constants.dart';
 class MemoryItem {
   final String id;
   String content;
-  String category; // Personal, Work, Learning, Health, Finance
+  String category; // شخصي، عمل، تعلم، صحي، مالي
   DateTime createdAt;
   List<String> tags;
 
   MemoryItem({
     required this.id,
     required this.content,
-    this.category = 'Personal',
+    this.category = 'شخصي',
     required this.createdAt,
     this.tags = const [],
   });
@@ -27,7 +27,7 @@ class MemoryItem {
 
   factory MemoryItem.fromJson(Map<String, dynamic> json) => MemoryItem(
     id: json['id'], content: json['content'],
-    category: json['category'] ?? 'Personal',
+    category: json['category'] ?? 'شخصي',
     createdAt: DateTime.parse(json['createdAt']),
     tags: List<String>.from(json['tags'] ?? []),
   );
@@ -128,7 +128,7 @@ class MemoryProvider extends ChangeNotifier {
             _memories.add(MemoryItem(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
               content: content,
-              category: item['metadata']?['category'] ?? 'Personal',
+              category: item['metadata']?['category'] ?? 'شخصي',
               createdAt: DateTime.now(),
               tags: List<String>.from(item['metadata']?['tags'] ?? []),
             ));

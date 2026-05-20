@@ -24,7 +24,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Set status bar
+  // Set Arabic status bar
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
@@ -62,13 +62,13 @@ class OWJApp extends StatelessWidget {
       child: Consumer<AppProvider>(
         builder: (context, appProvider, _) {
           return MaterialApp(
-            title: 'OWJ',
+            title: 'أوج',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: appProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            locale: const Locale('en', 'US'),
-            supportedLocales: const [Locale('en', 'US')],
+            locale: const Locale('ar', 'EG'),
+            supportedLocales: const [Locale('ar', 'EG')],
             builder: (context, child) {
               // Initialize chat provider with other providers after build
               final chatProvider = Provider.of<ChatProvider>(context, listen: false);
@@ -85,7 +85,7 @@ class OWJApp extends StatelessWidget {
                 notifications: notifProvider,
               );
               return Directionality(
-                textDirection: TextDirection.ltr,
+                textDirection: TextDirection.rtl,
                 child: child!,
               );
             },

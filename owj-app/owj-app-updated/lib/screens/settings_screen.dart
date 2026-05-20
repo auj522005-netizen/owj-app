@@ -62,9 +62,9 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
             labelColor: AppColors.gold,
             unselectedLabelColor: subColor,
             tabs: const [
-              Tab(icon: Icon(Icons.smart_toy, size: 18), text: 'AI'),
-              Tab(icon: Icon(Icons.key, size: 18), text: 'Keys'),
-              Tab(icon: Icon(Icons.tune, size: 18), text: 'General'),
+              Tab(icon: Icon(Icons.smart_toy, size: 18), text: 'الذكاء'),
+              Tab(icon: Icon(Icons.key, size: 18), text: 'المفاتيح'),
+              Tab(icon: Icon(Icons.tune, size: 18), text: 'عام'),
             ],
           ),
         ),
@@ -88,7 +88,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _sectionHeader('Select Active Model', isDark),
+        _sectionHeader('اختار الموديل النشط', isDark),
         const SizedBox(height: 12),
         ...AppConstants.aiProviders.map((provider) {
           final isSelected = apiKeys.selectedModel == provider;
@@ -143,7 +143,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                                   decoration: BoxDecoration(color: AppColors.gold.withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
-                                  child: Text('Active', style: TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold)),
+                                  child: Text('نشط', style: TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold)),
                                 ),
                             ],
                           ),
@@ -182,7 +182,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
           );
         }),
         const SizedBox(height: 16),
-        _sectionHeader('Add custom models via OpenRouter', isDark),
+        _sectionHeader('إضافة موديلات مخصصة عبر OpenRouter', isDark),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(14),
@@ -197,8 +197,9 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'With an OpenRouter API key, you can access 100+ free and paid models like Claude, GPT-4, and more.',
+                  'لو عندك OpenRouter API، تقدر توصل لأكتر من 100 موديل مجاناً ومدفوع زي Claude و GPT-4 وغيرهم.',
                   style: TextStyle(color: AppColors.info, fontSize: 12, height: 1.5),
+                  textDirection: TextDirection.rtl,
                 ),
               ),
             ],
@@ -243,9 +244,9 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${apiKeys.activeKeyCount} of ${apiKeys.totalKeyCount} active keys', style: TextStyle(color: textColor, fontSize: 15, fontWeight: FontWeight.bold)),
+                    Text('${apiKeys.activeKeyCount} من ${apiKeys.totalKeyCount} مفاتيح نشطة', style: TextStyle(color: textColor, fontSize: 15, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
                     const SizedBox(height: 4),
-                    Text('Each key enables a new feature', style: TextStyle(color: subColor, fontSize: 12)),
+                    Text('كل مفتاح بيخلي ميزة جديدة تشتغل', style: TextStyle(color: subColor, fontSize: 12), textDirection: TextDirection.rtl),
                   ],
                 ),
               ),
@@ -253,17 +254,17 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                 onPressed: () {
                   apiKeys.resetToDefaults();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: const Text('Default keys restored'), backgroundColor: AppColors.success),
+                    SnackBar(content: const Text('تم استعادة المفاتيح الافتراضية'), backgroundColor: AppColors.success),
                   );
                 },
-                child: Text('Reset', style: TextStyle(color: AppColors.gold, fontSize: 12)),
+                child: Text('استعادة', style: TextStyle(color: AppColors.gold, fontSize: 12)),
               ),
             ],
           ),
         ),
         const SizedBox(height: 20),
 
-        _sectionHeader('AI Keys', isDark),
+        _sectionHeader('مفاتيح الذكاء الاصطناعي', isDark),
         const SizedBox(height: 8),
         _keyTile(apiKeys, AppConstants.geminiKey, isDark, textColor, subColor, cardColor),
         _keyTile(apiKeys, AppConstants.groqKey, isDark, textColor, subColor, cardColor),
@@ -273,7 +274,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         _keyTile(apiKeys, AppConstants.cerebrasKey, isDark, textColor, subColor, cardColor),
         const SizedBox(height: 20),
 
-        _sectionHeader('Search, Memory & Voice', isDark),
+        _sectionHeader('خدمات البحث والذاكرة والصوت', isDark),
         const SizedBox(height: 8),
         _keyTile(apiKeys, AppConstants.mem0Key, isDark, textColor, subColor, cardColor),
         _keyTile(apiKeys, AppConstants.tavilyKey, isDark, textColor, subColor, cardColor),
@@ -281,7 +282,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         _keyTile(apiKeys, AppConstants.elevenlabsKey, isDark, textColor, subColor, cardColor),
         const SizedBox(height: 20),
 
-        _sectionHeader('Integrations', isDark),
+        _sectionHeader('تكاملات خارجية', isDark),
         const SizedBox(height: 8),
         _keyTile(apiKeys, AppConstants.githubKey, isDark, textColor, subColor, cardColor),
         _keyTile(apiKeys, AppConstants.notionKey, isDark, textColor, subColor, cardColor),
@@ -336,7 +337,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(label, style: TextStyle(color: textColor, fontSize: 13, fontWeight: FontWeight.w500)),
+                  child: Text(label, style: TextStyle(color: textColor, fontSize: 13, fontWeight: FontWeight.w500), textDirection: TextDirection.rtl),
                 ),
                 if (hasKey)
                   Icon(Icons.check_circle, color: AppColors.success, size: 16),
@@ -350,7 +351,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      isEditing ? 'Close' : (hasKey ? 'Edit' : 'Add'),
+                      isEditing ? 'إغلاق' : (hasKey ? 'تعديل' : 'إضافة'),
                       style: TextStyle(color: isEditing ? AppColors.gold : subColor, fontSize: 11),
                     ),
                   ),
@@ -373,7 +374,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                           textDirection: TextDirection.ltr,
                           style: TextStyle(color: textColor, fontSize: 13, fontFamily: 'monospace'),
                           decoration: InputDecoration(
-                            hintText: 'Paste key here...',
+                            hintText: 'الصق المفتاح هنا...',
                             hintStyle: TextStyle(color: subColor, fontSize: 12),
                             filled: true,
                             fillColor: isDark ? AppColors.darkSurface : AppColors.lightBg,
@@ -395,7 +396,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                         Expanded(
                           child: OutlinedButton.icon(
                             icon: Icon(Icons.delete_outline, size: 16, color: AppColors.error),
-                            label: Text('Delete', style: TextStyle(color: AppColors.error, fontSize: 12)),
+                            label: Text('حذف', style: TextStyle(color: AppColors.error, fontSize: 12)),
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(color: AppColors.error.withOpacity(0.4)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -413,7 +414,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                         flex: 2,
                         child: ElevatedButton.icon(
                           icon: const Icon(Icons.save, size: 16),
-                          label: const Text('Save', style: TextStyle(fontSize: 12)),
+                          label: const Text('حفظ', style: TextStyle(fontSize: 12)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.gold,
                             foregroundColor: AppColors.darkBg,
@@ -426,7 +427,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
                               apiKeys.setKey(storageKey, val);
                               setState(() => _editing[storageKey] = false);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('$label key saved'), backgroundColor: AppColors.success, duration: const Duration(seconds: 2)),
+                                SnackBar(content: Text('تم حفظ مفتاح $label'), backgroundColor: AppColors.success, duration: const Duration(seconds: 2)),
                               );
                             }
                           },
@@ -464,18 +465,18 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
               Container(
                 width: 64, height: 64,
                 decoration: BoxDecoration(color: AppColors.gold.withOpacity(0.2), borderRadius: BorderRadius.circular(16)),
-                child: Center(child: Text('OWJ', style: TextStyle(color: AppColors.gold, fontSize: 24, fontWeight: FontWeight.bold))),
+                child: Center(child: Text('أوج', style: TextStyle(color: AppColors.gold, fontSize: 24, fontWeight: FontWeight.bold))),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('OWJ - Your Smart Guide', style: TextStyle(color: AppColors.gold, fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('أوج - مرشدك الذكي', style: TextStyle(color: AppColors.gold, fontSize: 16, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
                     const SizedBox(height: 4),
-                    Text('Version ${AppConstants.appVersion}', style: TextStyle(color: subColor, fontSize: 12)),
+                    Text('الإصدار ${AppConstants.appVersion}', style: TextStyle(color: subColor, fontSize: 12)),
                     const SizedBox(height: 4),
-                    Text('Made with ❤️', style: TextStyle(color: subColor, fontSize: 11)),
+                    Text('مصنوع بـ ❤️ للعرب', style: TextStyle(color: subColor, fontSize: 11), textDirection: TextDirection.rtl),
                   ],
                 ),
               ),
@@ -484,13 +485,13 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         ),
         const SizedBox(height: 24),
 
-        _sectionHeader('Appearance', isDark),
+        _sectionHeader('المظهر', isDark),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, width: 0.5)),
           child: SwitchListTile(
-            title: Text('Dark Mode', style: TextStyle(color: textColor, fontSize: 15)),
-            subtitle: Text(isDark ? 'Dark theme' : 'Light theme', style: TextStyle(color: subColor, fontSize: 12)),
+            title: Text('الوضع الليلي', style: TextStyle(color: textColor, fontSize: 15)),
+            subtitle: Text(isDark ? 'وضع داكن' : 'وضع فاتح', style: TextStyle(color: subColor, fontSize: 12)),
             secondary: Container(
               width: 36, height: 36,
               decoration: BoxDecoration(color: AppColors.gold.withOpacity(0.15), shape: BoxShape.circle),
@@ -503,23 +504,23 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         ),
         const SizedBox(height: 24),
 
-        _sectionHeader('Data', isDark),
+        _sectionHeader('البيانات', isDark),
         const SizedBox(height: 8),
         _settingsTile(
           icon: Icons.restore,
           iconColor: AppColors.info,
-          title: 'Reset default API keys',
-          subtitle: 'Reset all keys to default values',
+          title: 'استعادة مفاتيح API الافتراضية',
+          subtitle: 'يرجع كل المفاتيح للقيم الافتراضية',
           isDark: isDark, textColor: textColor, subColor: subColor, cardColor: cardColor,
           onTap: () {
             _showConfirmDialog(
               context: context,
-              title: 'Reset Keys',
-              body: 'Reset all keys to defaults?',
+              title: 'استعادة المفاتيح',
+              body: 'هترجع كل المفاتيح للافتراضية؟',
               onConfirm: () {
                 apiKeys.resetToDefaults();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: const Text('Default keys restored'), backgroundColor: AppColors.success),
+                  SnackBar(content: const Text('تم استعادة المفاتيح الافتراضية'), backgroundColor: AppColors.success),
                 );
               },
             );
@@ -529,14 +530,14 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         _settingsTile(
           icon: Icons.copy,
           iconColor: AppColors.warning,
-          title: 'Copy system status',
-          subtitle: 'Copy app info for diagnostics',
+          title: 'نسخ حالة النظام',
+          subtitle: 'نسخ معلومات التطبيق للتشخيص',
           isDark: isDark, textColor: textColor, subColor: subColor, cardColor: cardColor,
           onTap: () {
-            final info = 'OWJ v${AppConstants.appVersion}\nModel: ${apiKeys.selectedModel}\nActive keys: ${apiKeys.activeKeyCount}/${apiKeys.totalKeyCount}';
+            final info = 'أوج v${AppConstants.appVersion}\nالموديل: ${apiKeys.selectedModel}\nالمفاتيح النشطة: ${apiKeys.activeKeyCount}/${apiKeys.totalKeyCount}';
             Clipboard.setData(ClipboardData(text: info));
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Copied'), duration: Duration(seconds: 2)),
+              const SnackBar(content: Text('تم النسخ'), duration: Duration(seconds: 2)),
             );
           },
         ),
@@ -577,13 +578,13 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(title, style: TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.w500), textDirection: TextDirection.rtl),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: TextStyle(color: subColor, fontSize: 11)),
+                  Text(subtitle, style: TextStyle(color: subColor, fontSize: 11), textDirection: TextDirection.rtl),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: subColor, size: 18),
+            Icon(Icons.chevron_left, color: subColor, size: 18),
           ],
         ),
       ),
@@ -597,7 +598,7 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
         children: [
           Container(width: 3, height: 16, decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(2))),
           const SizedBox(width: 8),
-          Text(title, style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold)),
+          Text(title, style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
         ],
       ),
     );
@@ -618,10 +619,10 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
   void _showNoKeySnackbar(String provider) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('You need to add an API key for $provider first'),
+        content: Text('لازم تضيف مفتاح API لـ $provider الأول'),
         backgroundColor: AppColors.warning,
         action: SnackBarAction(
-          label: 'Add',
+          label: 'إضافة',
           textColor: AppColors.darkBg,
           onPressed: () => tabController.animateTo(1),
         ),
@@ -638,13 +639,13 @@ class SettingsScreenState extends State<SettingsScreen> with SingleTickerProvide
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
+        title: Text(title, textDirection: TextDirection.rtl),
+        content: Text(body, textDirection: TextDirection.rtl),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
           ElevatedButton(
             onPressed: () { Navigator.pop(ctx); onConfirm(); },
-            child: const Text('Confirm'),
+            child: const Text('تأكيد'),
           ),
         ],
       ),

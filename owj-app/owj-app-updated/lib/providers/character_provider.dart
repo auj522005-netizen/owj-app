@@ -4,11 +4,11 @@ import '../core/constants.dart';
 
 class CharacterProvider extends ChangeNotifier {
   final SharedPreferences prefs;
-  String _activeCharacter = 'Wesal';
+  String _activeCharacter = 'وصال';
   List<Map<String, String>> _customCharacters = [];
 
   CharacterProvider(this.prefs) {
-    _activeCharacter = prefs.getString('active_character') ?? 'Wesal';
+    _activeCharacter = prefs.getString('active_character') ?? 'وصال';
     _loadCustomCharacters();
   }
 
